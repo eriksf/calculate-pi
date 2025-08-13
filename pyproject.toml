@@ -3,7 +3,7 @@ name = "calculate-pi"
 version = "0.5.0"
 description = "Calculate Pi python poetry project demo"
 authors = [{ name = "Erik Ferlanti", email = "eferlanti@tacc.utexas.edu" }]
-requires-python = "~=3.12"
+requires-python = "~=3.12.0"
 readme = "README.md"
 license = "BSD-3-Clause"
 dependencies = [
