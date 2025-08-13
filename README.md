@@ -1,22 +1,22 @@
 # Calculate PI
 
-A python poetry project demo for calculating PI.
+A python uv project demo for calculating PI.
 
 ## Prerequisites
 
 - Git
 - Docker
-- Python >= 3.11 (prefer using [asdf](https://asdf-vm.com/) or [pyenv](https://github.com/pyenv/pyenv) to system python)
-- [Poetry](https://python-poetry.org/) (prefer [asdf-poetry](https://github.com/asdf-community/asdf-poetry) plugin or installing with [pipx](https://github.com/pypa/pipx))
+- Python >= 3.12 (prefer using [asdf](https://asdf-vm.com/), [pyenv](https://github.com/pyenv/pyenv) or or [uv managed versions](https://docs.astral.sh/uv/concepts/python-versions/) to system python)
+- [uv](https://docs.astral.sh/uv/)
   
   ```console
-  > curl -sSL https://install.python-poetry.org | python3 -
+  > curl -LsSf https://astral.sh/uv/install.sh | sh
   ```
 
-- poetry-bumpversion plugin
+- [bump-my-version](https://callowayproject.github.io/bump-my-version/) tool
   
   ```console
-  > poetry self add poetry-bumpversion
+  > uv tool install bump-my-version
   ```
 
 ## Installation
@@ -24,7 +24,8 @@ A python poetry project demo for calculating PI.
 ```console
 > git clone git@github.com:eriksf/calculate-pi.git
 > cd calculate-pi
-> poetry install
+> uv venv --seed --python 3.12
+> uv sync
 ```
 
 ## Usage
@@ -47,25 +48,75 @@ Options:
 
 ## Development
 
-To update the version, use the `poetry version <major|minor|patch>` command (aided by the poetry-bumpversion plugin):
+To update the version, use the `bump-my-version` tool. Use the `show-bump` subcommand to show version bumps based on the current version:
 
 ```console
-> poetry version patch
-Bumping version from 0.3.0 to 0.3.1
-poetry_bumpversion: processed file calculate_pi/version.py
+> uvx bump-my-version show-bump
+0.5.0 ── bump ─┬─ major ─ 1.0.0
+               ├─ minor ─ 0.6.0
+               ╰─ patch ─ 0.5.1
 ```
 
-This will update the version in both the `pyproject.toml` and the `calculate_pi/version.py` files. If you want to test the version bump before updating files, you can use the `--dry-run` option:
+To test the version bump before updating anything and show what files will be changed, use the `--dry-run` option to the `bump <version>` subcommand:
 
 ```console
-> poetry version patch --dry-run
-Bumping version from 0.3.0 to 0.3.1
-poetry_bumpversion: processed file calculate_pi/version.py
+> uvx bump-my-version bump patch --dry-run -v
+Starting BumpVersion 1.2.1
+Reading configuration
+  Reading config file: /Users/eriksf/Devel/git/calculate-pi/pyproject.toml
+  Parsing current version '0.5.0'
+  No setup hooks defined
+  Attempting to increment part 'patch'
+    Values are now: major=0, minor=5, patch=1
+  New version will be '0.5.1'
+Dry run active, won't touch any files.
+
+File calculate_pi/version.py: replace `{current_version}` with `{new_version}`
+  Found '0\.5\.0' at line 1: 0.5.0
+  Would change file calculate_pi/version.py:
+    *** before calculate_pi/version.py
+    --- after calculate_pi/version.py
+    ***************
+    *** 1 ****
+    ! __version__ = '0.5.0'
+    --- 1 ----
+    ! __version__ = '0.5.1'
+
+Processing config file: /Users/eriksf/Devel/git/calculate-pi/pyproject.toml
+  Found '0\.5\.0' at line 1: 0.5.0
+  Would change file /Users/eriksf/Devel/git/calculate-pi/pyproject.toml:tool.bumpversion.current_version:
+    *** before /Users/eriksf/Devel/git/calculate-pi/pyproject.toml:tool.bumpversion.current_version
+    --- after /Users/eriksf/Devel/git/calculate-pi/pyproject.toml:tool.bumpversion.current_version
+    ***************
+    *** 1 ****
+    ! 0.5.0
+    --- 1 ----
+    ! 0.5.1
+  Found '0\.5\.0' at line 1: 0.5.0
+  Would change file /Users/eriksf/Devel/git/calculate-pi/pyproject.toml:project.version:
+    *** before /Users/eriksf/Devel/git/calculate-pi/pyproject.toml:project.version
+    --- after /Users/eriksf/Devel/git/calculate-pi/pyproject.toml:project.version
+    ***************
+    *** 1 ****
+    ! 0.5.0
+    --- 1 ----
+    ! 0.5.1
+No pre-commit hooks defined
+  Would not commit
+  Would not tag
+No post-commit hooks defined
+Done.
+```
+
+To do the actual update, use the `uvx bump-my-version bump <version>` subcommand to update the version in both the `pyproject.toml` and the `calculate_pi/version.py` files:
+
+```console
+> uvx bump-my-version bump patch
 ```
 
 After updating the version and committing the changes back to the repo, you should `tag` the repo to match this version:
 
 ```console
-> git tag -a 0.3.1 -m "Version 0.3.1"
-> git push origin 0.3.1
+> git tag -a 0.5.1 -m "Version 0.5.1"
+> git push origin 0.5.1
 ```
